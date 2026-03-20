@@ -67,6 +67,78 @@ Build a **fully automated, AI-powered insurance system** focused strictly on:
 * GPS spoofing detection
 * Duplicate claim prevention
 * ML-based anomaly detection
+## 🛡️ Fraud Detection & Location Integrity
+
+Ensuring the integrity of location data is critical in a parametric insurance system, as claims are triggered automatically based on real-world events. A major challenge is **location spoofing**, where users may fake their GPS location to trigger false claims.
+
+To address this, our platform implements a **multi-layer fraud detection system**:
+
+---
+
+### 🔍 Multi-Source Location Validation
+
+We validate user location using multiple signals instead of relying solely on GPS:
+
+* GPS coordinates (device location)
+* IP-based geolocation
+* Network/WiFi signals (simulated)
+
+If inconsistencies are detected between these sources, the system flags the request as suspicious.
+
+---
+
+### 📍 Movement Consistency Analysis
+
+We track user movement patterns over time to detect unrealistic jumps:
+
+* Sudden long-distance changes in short time intervals
+* Example: Hyderabad → Mumbai within minutes
+
+Such anomalies are flagged as potential spoofing attempts.
+
+---
+
+### 🌧️ Event Correlation Verification
+
+Claims are validated against real-world data:
+
+* Weather API confirms rainfall
+* AQI APIs confirm pollution levels
+
+If a user attempts to trigger a claim without a corresponding real-world event, the claim is automatically rejected.
+
+---
+
+### 🤖 AI-Based Fraud Scoring
+
+A lightweight ML-based scoring system evaluates fraud risk using:
+
+* Location mismatch
+* Abnormal movement patterns
+* Unusual claim behavior
+
+Each claim is assigned a **fraud risk score**, and high-risk claims are blocked automatically.
+
+---
+
+### 🔒 Claim Safeguards
+
+* One claim per event per user
+* Duplicate claim prevention
+* Device-level tracking (simulated fingerprinting)
+
+---
+
+### ⚡ Outcome
+
+* Prevents false payouts
+* Ensures fairness in the system
+* Maintains trust in automated insurance workflows
+
+---
+
+👉 This approach ensures that our **parametric automation remains secure, reliable, and fraud-resistant**, even in real-world deployment scenarios.
+
 
 ---
 
@@ -95,7 +167,7 @@ Build a **fully automated, AI-powered insurance system** focused strictly on:
 
 ## 🏗️ System Architecture
 
-```plaintext
+
                 ┌────────────────────┐
                 │   React Frontend   │
                 └─────────┬──────────┘
@@ -124,7 +196,7 @@ Build a **fully automated, AI-powered insurance system** focused strictly on:
                 ┌────────────────────┐
                 │ Razorpay (Test)    │
                 └────────────────────┘
-```
+
 
 ---
 

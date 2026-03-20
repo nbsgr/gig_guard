@@ -69,15 +69,15 @@ Build a **fully automated, AI-powered insurance system** focused strictly on:
 * ML-based anomaly detection
 ## 🛡️ Fraud Detection & Location Integrity
 
-Ensuring the integrity of location data is critical in a parametric insurance system, as claims are triggered automatically based on real-world events. A major challenge is **location spoofing**, where users may fake their GPS location to trigger false claims.
+Ensuring the integrity of claims is critical in a **parametric insurance system**, where payouts are automatically triggered based on real-world events. A major challenge is **location spoofing and fraudulent claim attempts**, where users may manipulate GPS, device identity, or environment data.
 
-To address this, our platform implements a **multi-layer fraud detection system**:
+To address this, our platform implements a **robust multi-layer fraud detection system** that validates user activity across multiple dimensions.
 
 ---
 
 ### 🔍 Multi-Source Location Validation
 
-We validate user location using multiple signals instead of relying solely on GPS:
+We do not rely on a single source of truth for location. Instead, we cross-verify multiple signals:
 
 * GPS coordinates (device location)
 * IP-based geolocation
@@ -89,23 +89,132 @@ If inconsistencies are detected between these sources, the system flags the requ
 
 ### 📍 Movement Consistency Analysis
 
-We track user movement patterns over time to detect unrealistic jumps:
+We analyze user movement patterns over time to detect unrealistic behavior:
 
-* Sudden long-distance changes in short time intervals
+* Sudden long-distance travel in short intervals
 * Example: Hyderabad → Mumbai within minutes
 
-Such anomalies are flagged as potential spoofing attempts.
+Such anomalies indicate possible spoofing and are flagged for review.
 
 ---
 
 ### 🌧️ Event Correlation Verification
 
-Claims are validated against real-world data:
+Claims are validated against **real-world external data sources**:
 
-* Weather API confirms rainfall
-* AQI APIs confirm pollution levels
+* Weather APIs → rainfall validation
+* AQI APIs → pollution validation
+* Mock/curfew events → zone-based validation
 
-If a user attempts to trigger a claim without a corresponding real-world event, the claim is automatically rejected.
+👉 A claim is only approved if:
+
+```plaintext
+Disruption Event = TRUE
+AND User Location ∈ Affected Zone
+```
+
+If no corresponding real-world disruption exists, the claim is automatically rejected.
+
+---
+
+### 🔐 Device Identification
+
+Each user device is assigned a **unique Device ID**, generated and stored locally:
+
+* Generated using secure UUID
+* Stored in browser local storage
+* Persistent across sessions
+
+This allows us to:
+
+* Identify returning users
+* Detect logins from new or unknown devices
+
+---
+
+### 🌐 Browser Fingerprinting
+
+We generate a **browser signature (fingerprint)** using:
+
+* User agent
+* Operating system
+* Screen resolution
+* Language
+* Timezone
+
+These attributes form a **semi-unique identifier** for each browser environment.
+
+---
+
+### 🧠 Device & Fingerprint Validation
+
+Incoming requests are compared against known device records.
+
+#### 🚨 Suspicious Scenarios:
+
+* Login from a new or unknown device
+* Mismatch between Device ID and fingerprint
+* Multiple accounts using the same fingerprint
+* Sudden change in user environment
+
+---
+
+### 🔍 Validation Strategy
+
+```plaintext
+IF (device_id NOT recognized)
+   OR (fingerprint mismatch)
+   OR (location inconsistency detected)
+   OR (event not verified)
+THEN flag as suspicious activity
+```
+
+---
+
+### 🔗 Integration with Claim Lifecycle
+
+Fraud checks are applied at multiple stages:
+
+* User authentication
+* Claim triggering
+* Payout processing
+
+👉 Suspicious claims are:
+
+* Flagged for review
+* Blocked from payout
+* Logged for fraud analytics
+
+---
+
+### ⚠️ Limitations
+
+* Browser fingerprinting is not 100% unique
+* Advanced users may bypass detection using VPNs or spoofing tools
+
+---
+
+### ✅ Our Approach
+
+Instead of relying on a single validation layer, we combine:
+
+* Device ID
+* Browser fingerprint
+* Multi-source location validation
+* Movement analysis
+* Event-based verification (weather/AQI)
+
+👉 This creates a **defense-in-depth fraud detection system** suitable for real-world deployment.
+
+---
+
+### 💡 Key Insight
+
+> We do not trust user-provided data alone.
+> Every claim is validated using device identity, environmental signals, and anomaly detection.
+
+---
+
 
 ---
 
